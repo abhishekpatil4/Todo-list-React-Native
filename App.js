@@ -20,7 +20,7 @@ const items = [
 export default function App() {
   const [listData, setListData] = useState([]);
   const [listContent, setListContent] = useState('');
-  useState(() => {
+  useEffect(() => {
     setListData(items);
   }, []);
   const addNewItem = (content) => {
@@ -28,7 +28,7 @@ export default function App() {
     // Haptics.notificationAsync(
     //   Haptics.NotificationFeedbackType.Warning
     // );
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
     setListData((prevListData) => [...prevListData, content]);
     setListContent('');
   };
