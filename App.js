@@ -14,7 +14,7 @@ import Header from './components/Header';
 import ListItem from './components/ListItem';
 
 const items = [
-  'Read a book',
+  'Go for a run',
 ];
 
 export default function App() {
