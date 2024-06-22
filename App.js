@@ -10,37 +10,44 @@ import {
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useState, useEffect } from 'react';
-import Header from './components/Header';
-import ListItem from './components/ListItem';
-
-const items = [
-  'Go for a run',
-];
+import Header from './components/Header.js';
+import ListItem from './components/ListItem.js';
+import { storeTask, getTask } from './AsyncStorage.js';
 
 export default function App() {
   const [listData, setListData] = useState([]);
   const [listContent, setListContent] = useState('');
   useEffect(() => {
-    setListData(items);
+    const getStoredTask = async () => {
+      const storedTasks = await getTask();
+      if (storedTasks) {
+        setListData(storedTasks);
+      } else {
+        setListContent(null);
+      }
+    }
+    getStoredTask();
   }, []);
-  const addNewItem = (content) => {
-    // Haptics.selectionAsync();
-    // Haptics.notificationAsync(
-    //   Haptics.NotificationFeedbackType.Warning
-    // );
+
+  const addNewItem = async (content) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
     setListData((prevListData) => [...prevListData, content]);
     setListContent('');
+    await storeTask(content);
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContent}>
         <Header />
         <ScrollView style={styles.itemContainer}>
-          {listData.length > 0 &&
+          {listData.length > 0 ?
             listData.map((i, idx) => (
               <ListItem key={idx} content={i} setListData={setListData} />
-            ))}
+            ))
+            :
+            <Text style={styles.noTaskMessage}>No tasks to display</Text>
+          }
         </ScrollView>
       </View>
       <KeyboardAvoidingView behavior="position">
@@ -91,9 +98,14 @@ const styles = StyleSheet.create({
   newItemContainer: {
     flexDirection: 'row',
     paddingTop: 8,
-    paddingBottom:30,
+    paddingBottom: 30,
     paddingHorizontal: 20,
     gap: 8,
     backgroundColor: '#a0c7fa',
   },
+  noTaskMessage:{
+    textAlign:'center',
+    fontSize:20,
+    marginVertical:20,
+  }
 });
