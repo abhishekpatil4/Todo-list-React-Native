@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Button,
   ScrollView,
+  Alert
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useState, useEffect } from 'react';
@@ -30,16 +31,28 @@ export default function App() {
   }, []);
 
   const addNewItem = async (content) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-    setListData((prevListData) => [...prevListData, content]);
-    setListContent('');
-    await storeTask(content);
+    if (content == "") {
+      Alert.alert('Warning', "Task cannot be empty!", [
+        {
+          text: 'OK',
+          onPress: () => console.log('Cancel Pressed'),
+        },
+      ])
+      Haptics.notificationAsync(
+        Haptics.NotificationFeedbackType.Warning
+      )
+    } else {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+      setListData((prevListData) => [...prevListData, content]);
+      setListContent('');
+      await storeTask(content);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContent}>
-        <Header setListData={setListData}/>
+        <Header setListData={setListData} />
         <ScrollView style={styles.itemContainer}>
           {listData.length > 0 ?
             listData.map((i, idx) => (
@@ -63,7 +76,7 @@ export default function App() {
             <Button
               title="+"
               color="white"
-              onPress={() => addNewItem(listContent)}
+              onPress={() => addNewItem(listContent.trim())}
             />
           </View>
         </View>
@@ -103,9 +116,9 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: '#a0c7fa',
   },
-  noTaskMessage:{
-    textAlign:'center',
-    fontSize:20,
-    marginVertical:20,
+  noTaskMessage: {
+    textAlign: 'center',
+    fontSize: 20,
+    marginVertical: 20,
   }
 });
