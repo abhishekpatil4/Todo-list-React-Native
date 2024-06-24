@@ -1,11 +1,21 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { removeAll } from '../AsyncStorage.js';
 
-const Header = () => {
+const Header = ({ setListData }) => {
+    const handleRemoveAllTasks = () => {
+        removeAll();
+        setListData([]);
+    }
     return (
         <View style={styles.roundBg}>
             <Text style={styles.subHead}>Todo</Text>
-            <Pressable onPress={removeAll}>
+            <Pressable onPress={() => Alert.alert('Warning!', `Are you sure you want to delete all tasks?`, [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                },
+                { text: 'Yes', onPress: handleRemoveAllTasks },
+            ])}>
                 <View style={styles.buttonBorder}>
                     <Text style={styles.closeButton}>i</Text>
                 </View>

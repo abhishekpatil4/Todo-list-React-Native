@@ -39,7 +39,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContent}>
-        <Header />
+        <Header setListData={setListData}/>
         <ScrollView style={styles.itemContainer}>
           {listData.length > 0 ?
             listData.map((i, idx) => (
