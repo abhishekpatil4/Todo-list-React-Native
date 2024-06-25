@@ -14,9 +14,20 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header.js';
 import ListItem from './components/ListItem.js';
 import { storeTask, getTask } from './AsyncStorage.js';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function App() {
   const [listData, setListData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(new Date());
+  const onDateChange = (event, date) => {
+    setSelectedDate(date);
+    console.log("date: ", date);
+  };
+  const onTimeChange = (event, time) => {
+    setSelectedTime(time);
+    console.log("time: ", time);
+  };
   const [listContent, setListContent] = useState('');
   useEffect(() => {
     const getStoredTask = async () => {
@@ -80,6 +91,22 @@ export default function App() {
             />
           </View>
         </View>
+        <View style={styles.DateTimeSelector}>
+          <DateTimePicker
+            testID="datePicker"
+            value={selectedDate}
+            mode={'date'}
+            is24Hour={false}
+            onChange={onDateChange}
+          />
+          <DateTimePicker
+            testID="TimePicker"
+            value={selectedTime}
+            mode={'time'}
+            is24Hour={false}
+            onChange={onTimeChange}
+          />
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -120,5 +147,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     marginVertical: 20,
+  },
+  DateTimeSelector: {
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    flexDirection: 'row'
   }
 });
