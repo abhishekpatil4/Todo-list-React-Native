@@ -10,7 +10,7 @@ const ListItem = ({ content, setListData, dateTime }) => {
         //time
         let timeArray = time.split(":");
         let hour = timeArray[0].trim();
-        if(hour.length === 1){
+        if (hour.length === 1) {
             hour = "0" + hour;
         }
         let mins = timeArray[1];
@@ -18,7 +18,7 @@ const ListItem = ({ content, setListData, dateTime }) => {
         let ampm = second_ampm.slice(-2);
         const formattedTime = hour + ":" + mins + " " + ampm;
 
-        if(date == today){
+        if (date == today) {
             return ['', formattedTime];
         }
 
@@ -48,8 +48,8 @@ const ListItem = ({ content, setListData, dateTime }) => {
                 ])
             }>
             <View style={styles.roundBg}>
-                <Text style={styles.subHead}>{content}</Text>
-                <Text style={styles.subHead}>{formattedDateTime()[0]} {formattedDateTime()[1]}</Text>
+                <Text style={[styles.subHead, { flex: 1 }]}>{content}</Text>
+                <Text style={[styles.subHead, { textAlign: "right" }]}>{formattedDateTime()[0]} {formattedDateTime()[1]}</Text>
             </View>
         </Pressable>
     );
@@ -58,9 +58,10 @@ const ListItem = ({ content, setListData, dateTime }) => {
 const styles = StyleSheet.create({
     subHead: {
         fontSize: 18,
-        fontWeight: 600,
+        fontWeight: 400,
         padding: 15,
-        marginLeft: 10,
+        marginHorizontal: 10,
+        lineHeight:22
     },
     roundBg: {
         backgroundColor: 'white',
