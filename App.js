@@ -1,11 +1,13 @@
-import { Text, SafeAreaView, StyleSheet, View, ScrollView, Alert } from 'react-native';
+import { Text, SafeAreaView, StyleSheet, View, ScrollView, Alert, Button } from 'react-native';
 import { useState, useEffect } from 'react';
 import Header from './components/Header.js';
 import ListItem from './components/ListItem.js';
 import { storeTask, getTask } from './AsyncStorage.js';
 import AddNewItem from './components/addNewItem.js';
+import * as Haptics from 'expo-haptics';
 
 export default function App() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [listData, setListData] = useState([]);
   const [listContent, setListContent] = useState('');
   useEffect(() => {
@@ -19,6 +21,11 @@ export default function App() {
     }
     getStoredTask();
   }, []);
+
+  const newTask = () => {
+    setIsModalVisible(true);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -34,7 +41,10 @@ export default function App() {
           }
         </ScrollView>
       </View>
-      <AddNewItem listContent={listContent} setListContent={setListContent} listData={listData} setListData={setListData} />
+      <AddNewItem listContent={listContent} setListContent={setListContent} listData={listData} setListData={setListData} isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
+      <View style={styles.buttonContainer}>
+        <Button title='New Task' style={styles.button} color="white" onPress={newTask} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -57,4 +67,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginVertical: 20,
   },
+  buttonContainer: {
+    backgroundColor: 'black',
+    borderRadius: 8,
+    maxWidth: 200,
+    paddingHorizontal: 10,
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: 50,
+  }
 });

@@ -1,10 +1,10 @@
-import { View, KeyboardAvoidingView, TextInput, Button, StyleSheet, Alert } from "react-native"
+import { View, KeyboardAvoidingView, TextInput, Button, StyleSheet, Alert, Modal } from "react-native"
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { storeTask, getTask } from '../AsyncStorage.js';
 import * as Haptics from 'expo-haptics';
 
-const AddNewItem = ({ listContent, setListContent, listData, setListData }) => {
+const AddNewItem = ({ listContent, setListContent, listData, setListData, isModalVisible, setIsModalVisible }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedTime, setSelectedTime] = useState(new Date());
     const onDateChange = (event, date) => {
@@ -33,43 +33,52 @@ const AddNewItem = ({ listContent, setListContent, listData, setListData }) => {
             await storeTask(content);
         }
     };
-    return <KeyboardAvoidingView behavior="position">
-        <View style={styles.newItemContainer}>
-            <TextInput
-                style={styles.inputBox}
-                value={listContent}
-                onChangeText={setListContent}
-                placeholder="new item"
-            />
-            <View
-                style={{ backgroundColor: 'black', borderRadius: 8, width: 40 }}>
-                <Button
-                    title="+"
-                    color="white"
-                    onPress={() => addNewItem(listContent.trim())}
+    return <Modal visible={isModalVisible} onRequestClose={() => setIsModalVisible(false)} animationType="slide" presentationStyle="pageSheet">
+        <View style={styles.mainContent}>
+            <View style={styles.newItemContainer}>
+                <TextInput
+                    style={styles.inputBox}
+                    value={listContent}
+                    onChangeText={setListContent}
+                    placeholder="new item"
+                />
+                <View
+                    style={styles.buttonContainer}>
+                    <Button
+                        title="+"
+                        color="white"
+                        onPress={() => addNewItem(listContent.trim())}
+                    />
+                </View>
+            </View>
+            <View style={styles.DateTimeSelector}>
+                <DateTimePicker
+                    testID="datePicker"
+                    value={selectedDate}
+                    mode={'date'}
+                    is24Hour={false}
+                    onChange={onDateChange}
+                />
+                <DateTimePicker
+                    testID="TimePicker"
+                    value={selectedTime}
+                    mode={'time'}
+                    is24Hour={false}
+                    onChange={onTimeChange}
                 />
             </View>
         </View>
-        <View style={styles.DateTimeSelector}>
-            <DateTimePicker
-                testID="datePicker"
-                value={selectedDate}
-                mode={'date'}
-                is24Hour={false}
-                onChange={onDateChange}
-            />
-            <DateTimePicker
-                testID="TimePicker"
-                value={selectedTime}
-                mode={'time'}
-                is24Hour={false}
-                onChange={onTimeChange}
-            />
-        </View>
-    </KeyboardAvoidingView>
+    </Modal>
 }
 
+{/* <KeyboardAvoidingView behavior="position"></KeyboardAvoidingView> */ }
+
 const styles = StyleSheet.create({
+    mainContent: {
+        flex: 1,
+        backgroundColor: '#bed8fa',
+        paddingTop: 15,
+    },
     inputBox: {
         flex: 10,
         borderWidth: 2,
@@ -86,12 +95,16 @@ const styles = StyleSheet.create({
         paddingBottom: 30,
         paddingHorizontal: 20,
         gap: 8,
-        backgroundColor: '#a0c7fa',
     },
     DateTimeSelector: {
-        alignItems: 'center',
+        alignSelf: 'center',
         paddingHorizontal: 10,
         flexDirection: 'row'
+    },
+    buttonContainer: {
+        backgroundColor: 'black',
+        borderRadius: 8,
+        width: 40
     }
 });
 
