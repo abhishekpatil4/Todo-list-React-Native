@@ -34,7 +34,7 @@ export default function App() {
         <ScrollView style={styles.itemContainer}>
           {listData.length > 0 ?
             listData.map((i, idx) => (
-              <ListItem key={idx} content={i} setListData={setListData} />
+              <ListItem key={idx} content={i.content} dateTime={i.dateTime} setListData={setListData} />
             ))
             :
             <Text style={styles.noTaskMessage}>No tasks to display</Text>

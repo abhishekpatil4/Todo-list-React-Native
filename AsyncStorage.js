@@ -11,7 +11,7 @@ export const storeTask = async (newTask) => {
             const storedTasksArr = [newTask];
             await AsyncStorage.setItem('tasks', JSON.stringify(storedTasksArr));
         }
-        console.log(`Added task: ${newTask}`);
+        console.log(`Added task: `, newTask);
     } catch (e) {
         console.log(e);
     }
@@ -30,9 +30,9 @@ export const removeTask = async (taskToRemove) => {
     try {
         const storedTasks = await AsyncStorage.getItem('tasks');
         const storedTasksArr = JSON.parse(storedTasks);
-        const newArray = storedTasksArr.filter((task) => task !== taskToRemove);
+        const newArray = storedTasksArr.filter((task) => task.content !== taskToRemove);
         await AsyncStorage.setItem('tasks', JSON.stringify(newArray));
-        console.log(`Removed task: ${taskToRemove}`);
+        console.log(`Removed task: `, taskToRemove);
     } catch (e) {
         console.log(e);
     }

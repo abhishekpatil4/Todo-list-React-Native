@@ -1,19 +1,13 @@
-import { View, KeyboardAvoidingView, TextInput, Button, StyleSheet, Alert, Modal } from "react-native"
+import { View, KeyboardAvoidingView, TextInput, Button, StyleSheet, Alert, Modal, TouchableWithoutFeedback, Keyboard } from "react-native"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState, useSyncExternalStore } from "react";
 import { storeTask, getTask } from '../AsyncStorage.js';
 import * as Haptics from 'expo-haptics';
 
 const AddNewItem = ({ listContent, setListContent, listData, setListData, isModalVisible, setIsModalVisible }) => {
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [selectedTime, setSelectedTime] = useState(new Date());
+    const [selectedDateTime, setSelectedDateTime] = useState(new Date());
     const onDateChange = (event, date) => {
-        setSelectedDate(date);
-        console.log("date: ", date);
-    };
-    const onTimeChange = (event, time) => {
-        setSelectedTime(time);
-        console.log("time: ", time);
+        setSelectedDateTime(date);
     };
     const addNewItem = async (content) => {
         if (content == "") {
@@ -28,50 +22,51 @@ const AddNewItem = ({ listContent, setListContent, listData, setListData, isModa
             )
         } else {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-            setListData((prevListData) => [...prevListData, content]);
+            setIsModalVisible(false);
+            const newTask = {
+                content: content,
+                dateTime: selectedDateTime.toLocaleString()
+            }
+            setListData((prevListData) => [...prevListData, newTask]);
             setListContent('');
-            await storeTask(content);
+            await storeTask(newTask);
         }
     };
     return <Modal visible={isModalVisible} onRequestClose={() => setIsModalVisible(false)} animationType="slide" presentationStyle="pageSheet">
-        <View style={styles.mainContent}>
-            <View style={styles.newItemContainer}>
-                <TextInput
-                    style={styles.inputBox}
-                    value={listContent}
-                    onChangeText={setListContent}
-                    placeholder="new item"
-                />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.mainContent}>
+                <View style={styles.newItemContainer}>
+                    <TextInput
+                        style={styles.inputBox}
+                        value={listContent}
+                        onChangeText={setListContent}
+                        placeholder="new item"
+                    />
+                </View>
+                <View style={styles.DateTimeSelector}>
+                    <DateTimePicker
+                        testID="datePicker"
+                        value={selectedDateTime}
+                        mode={'datetime'}
+                        is24Hour={false}
+                        onChange={onDateChange}
+                        placeholderText="Today"
+                        minimumDate={new Date()}
+                        display="spinner"
+                    />
+                </View>
                 <View
                     style={styles.buttonContainer}>
                     <Button
-                        title="+"
+                        title="Add"
                         color="white"
                         onPress={() => addNewItem(listContent.trim())}
                     />
                 </View>
             </View>
-            <View style={styles.DateTimeSelector}>
-                <DateTimePicker
-                    testID="datePicker"
-                    value={selectedDate}
-                    mode={'date'}
-                    is24Hour={false}
-                    onChange={onDateChange}
-                />
-                <DateTimePicker
-                    testID="TimePicker"
-                    value={selectedTime}
-                    mode={'time'}
-                    is24Hour={false}
-                    onChange={onTimeChange}
-                />
-            </View>
-        </View>
+        </TouchableWithoutFeedback>
     </Modal>
 }
-
-{/* <KeyboardAvoidingView behavior="position"></KeyboardAvoidingView> */ }
 
 const styles = StyleSheet.create({
     mainContent: {
@@ -94,20 +89,26 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         paddingBottom: 30,
         paddingHorizontal: 20,
-        gap: 8,
     },
     DateTimeSelector: {
         alignSelf: 'center',
         paddingHorizontal: 10,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        borderRadius: 8,
     },
     buttonContainer: {
         backgroundColor: 'black',
         borderRadius: 8,
-        width: 40
+        maxWidth: 200,
+        paddingHorizontal: 10,
+        alignSelf: 'center',
+        position: 'absolute',
+        bottom: 400,
     }
 });
 
+{/* <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}></KeyboardAvoidingView> */ }
 
 export default AddNewItem;
 
