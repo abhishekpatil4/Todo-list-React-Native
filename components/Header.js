@@ -8,7 +8,7 @@ const Header = ({ setListData }) => {
     }
     return (
         <View style={styles.roundBg}>
-            <Text style={styles.subHead}>Todo</Text>
+            <Text style={[styles.subHead]}>Todo</Text>
             <Pressable onPress={() => Alert.alert('Warning!', `Are you sure you want to delete all tasks?`, [
                 {
                     text: 'Cancel',
@@ -17,7 +17,7 @@ const Header = ({ setListData }) => {
                 { text: 'Yes', onPress: handleRemoveAllTasks },
             ])}>
                 <View style={styles.buttonBorder}>
-                    <Text style={styles.closeButton}>i</Text>
+                    <Text style={[styles.closeButton]}>i</Text>
                 </View>
             </Pressable>
         </View>

@@ -58,7 +58,7 @@ const ListItem = ({ content, setListData, dateTime }) => {
 const styles = StyleSheet.create({
     subHead: {
         fontSize: 18,
-        fontWeight: 400,
+        fontWeight: 600,
         padding: 15,
         marginHorizontal: 10,
         lineHeight:22
