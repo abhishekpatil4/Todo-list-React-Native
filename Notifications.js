@@ -13,14 +13,14 @@ Notifications.setNotificationHandler({
 
 // Second, call the method
 
-export const notify = () => {
+export const notify = (sec=1) => {
     Notifications.scheduleNotificationAsync({
         content: {
-            title: 'Task',
-            body: "notification body",
+            title: 'Notification title',
+            body: "Notification body",
         },
         trigger: {
-            seconds:10,
+            seconds:sec,
         },
     });
 }

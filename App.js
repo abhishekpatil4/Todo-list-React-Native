@@ -13,7 +13,6 @@ export default function App() {
   const [listData, setListData] = useState([]);
   const [listContent, setListContent] = useState('');
   useEffect(() => {
-    notify();
     const getStoredTask = async () => {
       const storedTasks = await getTask();
       if (storedTasks) {

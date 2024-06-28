@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { removeAll } from '../AsyncStorage.js';
+import { notify } from '../Notifications.js';
 
 const Header = ({ setListData }) => {
     const handleRemoveAllTasks = () => {
@@ -15,6 +16,7 @@ const Header = ({ setListData }) => {
                     onPress: () => console.log('Cancel Pressed'),
                 },
                 { text: 'Yes', onPress: handleRemoveAllTasks },
+                { text: 'Trigger Notification', onPress: () => notify(10) },
             ])}>
                 <View style={styles.buttonBorder}>
                     <Text style={[styles.closeButton]}>i</Text>
