@@ -1,16 +1,19 @@
 import { Text, SafeAreaView, StyleSheet, View, ScrollView, Alert, Button } from 'react-native';
+import { requestPermissionsForNotifications } from "./Notifications.js";
 import { useState, useEffect } from 'react';
 import Header from './components/Header.js';
 import ListItem from './components/ListItem.js';
 import { storeTask, getTask } from './AsyncStorage.js';
 import AddNewItem from './components/addNewItem.js';
 import * as Haptics from 'expo-haptics';
+import { notify } from './Notifications.js';
 
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [listData, setListData] = useState([]);
   const [listContent, setListContent] = useState('');
   useEffect(() => {
+    notify();
     const getStoredTask = async () => {
       const storedTasks = await getTask();
       if (storedTasks) {
